@@ -390,7 +390,7 @@ const TouchTable = (data) => {
                         minWidth: buttonWidth + 'px',
                         minHeight: buttonHeight + 'px',
                         fontFamily: "'Red Rose', serif",
-                        zIndex: 9
+                        zIndex: 9,
                     }}
                     onClick={() => {
                         if (window.require) {
