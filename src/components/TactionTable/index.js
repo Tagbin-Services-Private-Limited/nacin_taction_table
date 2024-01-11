@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Box, Button, Typography } from "@mui/material";
-import Placeholder from "../../assets/images/placeholder1.svg";
+import Placeholder from "../../assets/images/placeholder.svg";
 import BtnBackground from "../../assets/images/btnBg.png"
 import BtnBackgroundActive from "../../assets/images/btnBgActive.png"
 import audioFile from "../../assets/audio/audio.mp3"

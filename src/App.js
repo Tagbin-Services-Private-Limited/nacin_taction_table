@@ -1,12 +1,13 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useRef } from "react"
 import { Box } from "@mui/material";
 import Bg from "./assets/images/bg.png"
-import Placeholder from "./assets/images/placeholder1.svg"
+import Placeholder from "./assets/images/placeholder.svg"
 import TouchTable from "./components/TactionTable"
 
 const radius = 100
 
 const App = () => {
+  const initialRender = useRef(true);
   const [xcoordinates, setXcoordinates] = useState([])
   const [ycoordinates, setYcoordinates] = useState([])
 
@@ -17,12 +18,17 @@ const App = () => {
       ipcRenderer.on("socket-data", (event, data) => {
         setXcoordinates(data.x)
         setYcoordinates(data.y)
+        if (initialRender.current) {
+          ipcRenderer.send("event-clicked", { "event-clicked": "start" });
+        }
         clearTimeout(timerId);
+        initialRender.current = false
         timerId = setTimeout(() => {
           ipcRenderer.send("event-clicked", { "event-clicked": "reset" });
           setXcoordinates([]);
           setYcoordinates([]);
-        }, 5000);
+          initialRender.current = true
+        }, 3000);
       });
       return () => {
         ipcRenderer.removeAllListeners("socket-data");
