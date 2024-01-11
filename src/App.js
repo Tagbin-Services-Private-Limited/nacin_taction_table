@@ -19,6 +19,7 @@ const App = () => {
         setYcoordinates(data.y)
         clearTimeout(timerId);
         timerId = setTimeout(() => {
+          ipcRenderer.send("event-clicked", { "event-clicked": "reset" });
           setXcoordinates([]);
           setYcoordinates([]);
         }, 5000);
