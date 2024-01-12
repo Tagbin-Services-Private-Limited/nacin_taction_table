@@ -107,9 +107,13 @@ const App = () => {
       const endedTouchIds = Array.from(event.changedTouches).map(touch => touch.identifier);
       const remainingX = xcoordinates.filter((_, index) => !endedTouchIds.includes(index));
       const remainingY = ycoordinates.filter((_, index) => !endedTouchIds.includes(index));
+      xcoordinatesRef.current = remainingX;
+      ycoordinatesRef.current = remainingY;
       setXcoordinates(remainingX);
       setYcoordinates(remainingY);
       if (window.require && remainingX.length === 0 && remainingY.length === 0) {
+        xcoordinatesRef.current = [];
+        ycoordinatesRef.current = [];
         setXcoordinates([]);
         setYcoordinates([]);
         const { ipcRenderer } = window.require("electron");
