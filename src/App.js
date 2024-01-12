@@ -10,6 +10,8 @@ const App = () => {
   const initialRender = useRef(true);
   const [xcoordinates, setXcoordinates] = useState([])
   const [ycoordinates, setYcoordinates] = useState([])
+  const xcoordinatesRef = useRef([]);
+  const ycoordinatesRef = useRef([]);
 
   // useEffect(() => {
   //   if (window.require) {
@@ -61,8 +63,10 @@ const App = () => {
     const sumY = coordinates.reduce((acc, point) => acc + point.clientY, 0);
     const centerX = sumX / totalPoints;
     const centerY = sumY / totalPoints;
-    setXcoordinates([...xcoordinates, centerX])
-    setYcoordinates([...ycoordinates, centerY])
+    xcoordinatesRef.current = [...xcoordinatesRef.current, centerX];
+    ycoordinatesRef.current = [...ycoordinatesRef.current, centerY];
+    setXcoordinates(xcoordinatesRef.current)
+    setYcoordinates(ycoordinatesRef.current)
     return { centerX, centerY };
   }
 
