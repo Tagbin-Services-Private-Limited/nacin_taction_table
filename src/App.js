@@ -79,36 +79,38 @@ const App = () => {
                 const centerY = sumY / totalPoints;
                 setXcoordinates([...xcoordinates, centerX])
                 setYcoordinates([...ycoordinates, centerY])
-                if (window.require) {
-                  let timerId;
-                  const { ipcRenderer } = window.require("electron");
-                  if (initialRender.current) {
-                    ipcRenderer.send("event-clicked", { "event-clicked": "start" });
-                  }
-                  clearTimeout(timerId);
-                  initialRender.current = false
-                  timerId = setTimeout(() => {
-                    ipcRenderer.send("event-clicked", { "event-clicked": "reset" });
-                    const endedTouchIds = Array.from(event.changedTouches).map(touch => touch.identifier);
-                    const remainingX = xcoordinates.filter((_, index) => !endedTouchIds.includes(index));
-                    const remainingY = ycoordinates.filter((_, index) => !endedTouchIds.includes(index));
-                    setXcoordinates(remainingX);
-                    setYcoordinates(remainingY);
-                    initialRender.current = true
-                  }, 3000);
-                } else {
-                  let timerId;
-                  clearTimeout(timerId);
-                  initialRender.current = false
-                  timerId = setTimeout(() => {
-                    const endedTouchIds = Array.from(event.changedTouches).map(touch => touch.identifier);
-                    const remainingX = xcoordinates.filter((_, index) => !endedTouchIds.includes(index));
-                    const remainingY = ycoordinates.filter((_, index) => !endedTouchIds.includes(index));
-                    setXcoordinates(remainingX);
-                    setYcoordinates(remainingY);
-                    initialRender.current = true
-                  }, 3000);
-                }
+                // if (window.require) {
+                //   let timerId;
+                //   const { ipcRenderer } = window.require("electron");
+                //   if (initialRender.current) {
+                //     ipcRenderer.send("event-clicked", { "event-clicked": "start" });
+                //   }
+                //   clearTimeout(timerId);
+                //   initialRender.current = false
+                //   timerId = setTimeout(() => {
+                //     const endedTouchIds = Array.from(event.changedTouches).map(touch => touch.identifier);
+                //     const remainingX = xcoordinates.filter((_, index) => !endedTouchIds.includes(index));
+                //     const remainingY = ycoordinates.filter((_, index) => !endedTouchIds.includes(index));
+                //     if (remainingX.length === 0 && remainingY.length === 0) {
+                //       ipcRenderer.send("event-clicked", { "event-clicked": "reset" });
+                //     }
+                //     setXcoordinates(remainingX);
+                //     setYcoordinates(remainingY);
+                //     initialRender.current = true
+                //   }, 3000);
+                // } else {
+                //   let timerId;
+                //   clearTimeout(timerId);
+                //   initialRender.current = false
+                //   timerId = setTimeout(() => {
+                //     const endedTouchIds = Array.from(event.changedTouches).map(touch => touch.identifier);
+                //     const remainingX = xcoordinates.filter((_, index) => !endedTouchIds.includes(index));
+                //     const remainingY = ycoordinates.filter((_, index) => !endedTouchIds.includes(index));
+                //     setXcoordinates(remainingX);
+                //     setYcoordinates(remainingY);
+                //     initialRender.current = true
+                //   }, 3000);
+                // }
                 return { centerX, centerY };
               }
               const coordinates = []
@@ -121,9 +123,28 @@ const App = () => {
         }
       }
     }
+
+    const handleTouchEnd = (event) => {
+      event.preventDefault()
+      event.stopPropagation()
+      console.log("end")
+      const endedTouchIds = Array.from(event.changedTouches).map(touch => touch.identifier);
+      const remainingX = xcoordinates.filter((_, index) => !endedTouchIds.includes(index));
+      const remainingY = ycoordinates.filter((_, index) => !endedTouchIds.includes(index));
+      setXcoordinates(remainingX);
+      setYcoordinates(remainingY);
+      if (window.require && remainingX.length === 0 && remainingY.length === 0) {
+        setXcoordinates([]);
+        setYcoordinates([]);
+        const { ipcRenderer } = window.require("electron");
+        ipcRenderer.send("event-clicked", { "event-clicked": "reset" });
+      }
+    }
     document.addEventListener('touchmove', handleTouchMove, { passive: false });
+    document.addEventListener('touchend', handleTouchEnd, { passive: false });
     return () => {
       document.removeEventListener('touchmove', handleTouchMove);
+      document.removeEventListener('touchend', handleTouchEnd);
     };
   }, []);
 

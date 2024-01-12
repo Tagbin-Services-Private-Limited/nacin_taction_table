@@ -392,7 +392,10 @@ const TouchTable = (data) => {
                         fontFamily: "'Red Rose', serif",
                         zIndex: 9,
                     }}
-                    onClick={() => {
+                    onTouchEnd={(e) => {
+                        e.preventDefault()
+                        e.stopPropagation()
+                        console.log("clicked montreal_protocol")
                         if (window.require) {
                             const { ipcRenderer } = window.require("electron");
                             ipcRenderer.send("event-clicked", { "event-clicked": "montreal_protocol" });
@@ -436,7 +439,10 @@ const TouchTable = (data) => {
                                         textAlign: 'center',
                                         wordBreak: 'break-word'
                                     }}
-                                    onClick={() => {
+                                    onTouchEnd={(e) => {
+                                        e.preventDefault()
+                                        e.stopPropagation()
+                                        console.log("clicked", o)
                                         if (window.require) {
                                             const { ipcRenderer } = window.require("electron");
                                             ipcRenderer.send("event-clicked", { "event-clicked": o });
@@ -496,7 +502,10 @@ const TouchTable = (data) => {
                         zIndex: 9,
                         fontFamily: "'Red Rose', serif"
                     }}
-                    onClick={() => {
+                    onTouchEnd={(e) => {
+                        e.preventDefault()
+                        e.stopPropagation()
+                        console.log("clicked basel_convention")
                         if (window.require) {
                             const { ipcRenderer } = window.require("electron");
                             ipcRenderer.send("event-clicked", { "event-clicked": 'basel_convention' });
@@ -537,7 +546,10 @@ const TouchTable = (data) => {
                                     textAlign: 'center',
                                     wordBreak: 'break-word'
                                 }}
-                                onClick={() => {
+                                onTouchEnd={(e) => {
+                                    e.preventDefault()
+                                    e.stopPropagation()
+                                    console.log("clicked previous")
                                     const totalCards = btnCardsMap[selectedBtn].length;
                                     const newIndex = (carouselIndex - 1) % totalCards;
                                     if (newIndex === 0) {
@@ -582,7 +594,10 @@ const TouchTable = (data) => {
                                         wordBreak: 'break-word',
 
                                     }}
-                                    onClick={() => {
+                                    onTouchEnd={(e) => {
+                                        e.preventDefault()
+                                        e.stopPropagation()
+                                        console.log("clicked", o)
                                         if (window.require) {
                                             const { ipcRenderer } = window.require("electron");
                                             ipcRenderer.send("event-clicked", { "event-clicked": o });
@@ -618,7 +633,10 @@ const TouchTable = (data) => {
                                     textAlign: 'center',
                                     wordBreak: 'break-word'
                                 }}
-                                onClick={() => {
+                                onTouchEnd={(e) => {
+                                    e.preventDefault()
+                                    e.stopPropagation()
+                                    console.log("clicked next")
                                     const totalCards = btnCardsMap[selectedBtn].length;
                                     const newIndex = (carouselIndex + 1) % totalCards;
                                     if (newIndex === btnCardsMap[selectedBtn].length - 5) {
@@ -687,7 +705,10 @@ const TouchTable = (data) => {
                         minHeight: buttonHeight + 'px',
                         fontFamily: "'Red Rose', serif"
                     }}
-                    onClick={() => {
+                    onTouchEnd={(e) => {
+                        e.preventDefault()
+                        e.stopPropagation()
+                        console.log("clicked cites")
                         if (window.require) {
                             const { ipcRenderer } = window.require("electron");
                             ipcRenderer.send("event-clicked", { "event-clicked": 'cites' });
@@ -720,19 +741,34 @@ const TouchTable = (data) => {
                                 bottom: 'calc(100%)',
                             }}>
                             <img
-                                onClick={() => setAppendix(1)}
+                                onTouchEnd={(e) => {
+                                    e.preventDefault()
+                                    e.stopPropagation()
+                                    console.log("clicked appendix")
+                                    setAppendix(1);
+                                }}
                                 src={appendix === 1 ? btn1Active : btn1Inactive}
                                 alt="btn1"
                                 style={{ zIndex: appendix === 1 ? 3 : 1 }}
                             />
                             <img
-                                onClick={() => setAppendix(2)}
+                                onTouchEnd={(e) => {
+                                    e.preventDefault()
+                                    e.stopPropagation()
+                                    console.log("clicked appendix")
+                                    setAppendix(2);
+                                }}
                                 src={appendix === 2 ? btn2Active : btn2Inactive}
                                 alt="btn2"
                                 style={{ marginLeft: '-110px', zIndex: appendix === 2 ? 3 : 2, transform: appendix === 3 ? 'rotate(180deg)' : 'rotate(0deg)' }}
                             />
                             <img
-                                onClick={() => setAppendix(3)}
+                                onTouchEnd={(e) => {
+                                    e.preventDefault()
+                                    e.stopPropagation()
+                                    console.log("clicked appendix")
+                                    setAppendix(3);
+                                }}
                                 src={appendix === 3 ? btn3Active : btn3Inactive}
                                 alt="btn3"
                                 style={{ marginLeft: '-110px', zIndex: appendix === 3 ? 3 : 1 }}
@@ -766,7 +802,10 @@ const TouchTable = (data) => {
                                             textAlign: 'center',
                                             wordBreak: 'break-word'
                                         }}
-                                        onClick={() => {
+                                        onTouchEnd={(e) => {
+                                            e.preventDefault();
+                                            e.stopPropagation()
+                                            console.log("clicked", o)
                                             if (window.require) {
                                                 const { ipcRenderer } = window.require("electron");
                                                 ipcRenderer.send("event-clicked", { "event-clicked": o });
