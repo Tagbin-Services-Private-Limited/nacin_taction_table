@@ -55,73 +55,45 @@ const App = () => {
     return distances.every((distance, index, array) => Math.abs(distance - array[(index + 1) % 3]) < threshold);
   }
 
+  function calculateCenter(coordinates) {
+    const totalPoints = coordinates.length;
+    const sumX = coordinates.reduce((acc, point) => acc + point.clientX, 0);
+    const sumY = coordinates.reduce((acc, point) => acc + point.clientY, 0);
+    const centerX = sumX / totalPoints;
+    const centerY = sumY / totalPoints;
+    setXcoordinates([...xcoordinates, centerX])
+    setYcoordinates([...ycoordinates, centerY])
+    return { centerX, centerY };
+  }
+
   useEffect(() => {
     const handleTouchMove = (event) => {
       event.preventDefault();
       event.stopPropagation();
       const touches = event.touches;
-      if (touches.length % 3 === 0) {
+      console.log(touches.length, "touches.length")
+      if (touches.length >= 3) {
         const touchCoordinates = [];
         for (let i = 0; i < touches.length; i++) {
-          touchCoordinates.push({ clientX: touches[i].clientX, clientY: touches[i].clientY })
+          touchCoordinates.push({ clientX: touches[i].clientX, clientY: touches[i].clientY });
         }
-        const noOfTriangles = event.touches.length / 3;
-        for (let j = 0; j < noOfTriangles; j++) {
-          let newTouches = touchCoordinates.splice(j, ((j + 1) * 3))
-          if (newTouches.length === 3) {
-            const triangle = isTriangle(newTouches);
-            if (triangle) {
-              function calculateCenter(coordinates) {
-                const totalPoints = coordinates.length;
-                const sumX = coordinates.reduce((acc, point) => acc + point.clientX, 0);
-                const sumY = coordinates.reduce((acc, point) => acc + point.clientY, 0);
-                const centerX = sumX / totalPoints;
-                const centerY = sumY / totalPoints;
-                setXcoordinates([...xcoordinates, centerX])
-                setYcoordinates([...ycoordinates, centerY])
-                // if (window.require) {
-                //   let timerId;
-                //   const { ipcRenderer } = window.require("electron");
-                //   if (initialRender.current) {
-                //     ipcRenderer.send("event-clicked", { "event-clicked": "start" });
-                //   }
-                //   clearTimeout(timerId);
-                //   initialRender.current = false
-                //   timerId = setTimeout(() => {
-                //     const endedTouchIds = Array.from(event.changedTouches).map(touch => touch.identifier);
-                //     const remainingX = xcoordinates.filter((_, index) => !endedTouchIds.includes(index));
-                //     const remainingY = ycoordinates.filter((_, index) => !endedTouchIds.includes(index));
-                //     if (remainingX.length === 0 && remainingY.length === 0) {
-                //       ipcRenderer.send("event-clicked", { "event-clicked": "reset" });
-                //     }
-                //     setXcoordinates(remainingX);
-                //     setYcoordinates(remainingY);
-                //     initialRender.current = true
-                //   }, 3000);
-                // } else {
-                //   let timerId;
-                //   clearTimeout(timerId);
-                //   initialRender.current = false
-                //   timerId = setTimeout(() => {
-                //     const endedTouchIds = Array.from(event.changedTouches).map(touch => touch.identifier);
-                //     const remainingX = xcoordinates.filter((_, index) => !endedTouchIds.includes(index));
-                //     const remainingY = ycoordinates.filter((_, index) => !endedTouchIds.includes(index));
-                //     setXcoordinates(remainingX);
-                //     setYcoordinates(remainingY);
-                //     initialRender.current = true
-                //   }, 3000);
-                // }
-                return { centerX, centerY };
+
+        const noOfTouches = touchCoordinates.length;
+        console.log(noOfTouches, "noOfTouches")
+        // Iterate through all combinations of 3 touches to form triangles
+        for (let i = 0; i < noOfTouches - 2; i++) {
+          for (let j = i + 1; j < noOfTouches - 1; j++) {
+            for (let k = j + 1; k < noOfTouches; k++) {
+              const triangle = isTriangle([touchCoordinates[i], touchCoordinates[j], touchCoordinates[k]]);
+              console.log(triangle, "triangle", touchCoordinates[i], touchCoordinates[j], touchCoordinates[k])
+              if (triangle) {
+                const coordinates = [touchCoordinates[i], touchCoordinates[j], touchCoordinates[k]];
+                calculateCenter(coordinates);
               }
-              const coordinates = []
-              for (let i = 0; i < newTouches.length; i++) {
-                coordinates.push({ clientX: newTouches[i].clientX, clientY: newTouches[i].clientY })
-              }
-              calculateCenter(coordinates);
             }
           }
         }
-      }
+      };
     }
 
     const handleTouchEnd = (event) => {
