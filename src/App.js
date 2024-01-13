@@ -8,10 +8,10 @@ const radius = 100
 
 const App = () => {
   const initialRender = useRef(true);
-  const [xcoordinates, setXcoordinates] = useState([])
-  const [ycoordinates, setYcoordinates] = useState([])
-  const xcoordinatesRef = useRef([]);
-  const ycoordinatesRef = useRef([]);
+  const [xcoordinates, setXcoordinates] = useState([10])
+  const [ycoordinates, setYcoordinates] = useState([15])
+  const xcoordinatesRef = useRef([10]);
+  const ycoordinatesRef = useRef([15]);
 
   // useEffect(() => {
   //   if (window.require) {
@@ -58,13 +58,28 @@ const App = () => {
   }
 
   function calculateCenter(coordinates) {
+    xcoordinatesRef.current = xcoordinatesRef.current.filter((_, index) =>
+      coordinates.some(coord => coord.clientX === xcoordinatesRef.current[index])
+    );
+    ycoordinatesRef.current = ycoordinatesRef.current.filter((_, index) =>
+      coordinates.some(coord => coord.clientY === ycoordinatesRef.current[index])
+    );
     const totalPoints = coordinates.length;
     const sumX = coordinates.reduce((acc, point) => acc + point.clientX, 0);
     const sumY = coordinates.reduce((acc, point) => acc + point.clientY, 0);
     const centerX = sumX / totalPoints;
     const centerY = sumY / totalPoints;
-    xcoordinatesRef.current = [...xcoordinatesRef.current, centerX];
-    ycoordinatesRef.current = [...ycoordinatesRef.current, centerY];
+    const threshold = 50;
+    const indexToUpdate = xcoordinatesRef.current.findIndex(
+      (x, index) => Math.abs(centerX - x) < threshold && Math.abs(centerY - ycoordinatesRef.current[index]) < threshold
+    );
+    if (indexToUpdate !== -1) {
+      xcoordinatesRef.current[indexToUpdate] = centerX;
+      ycoordinatesRef.current[indexToUpdate] = centerY;
+    } else {
+      xcoordinatesRef.current = [...xcoordinatesRef.current, centerX];
+      ycoordinatesRef.current = [...ycoordinatesRef.current, centerY];
+    }
     setXcoordinates(xcoordinatesRef.current)
     setYcoordinates(ycoordinatesRef.current)
     return { centerX, centerY };
