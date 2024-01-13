@@ -11,142 +11,62 @@ const App = () => {
   const [xcoordinates, setXcoordinates] = useState([])
   const [ycoordinates, setYcoordinates] = useState([])
 
-  // useEffect(() => {
-  //   if (window.require) {
-  //     let timerId;
-  //     const { ipcRenderer } = window.require("electron");
-  //     ipcRenderer.on("socket-data", (event, data) => {
-  //       setXcoordinates(data.x)
-  //       setYcoordinates(data.y)
-  //       if (initialRender.current) {
-  //         ipcRenderer.send("event-clicked", { "event-clicked": "start" });
-  //       }
-  //       clearTimeout(timerId);
-  //       initialRender.current = false
-  //       timerId = setTimeout(() => {
-  //         ipcRenderer.send("event-clicked", { "event-clicked": "reset" });
-  //         setXcoordinates([]);
-  //         setYcoordinates([]);
-  //         initialRender.current = true
-  //       }, 3000);
-  //     });
-  //     return () => {
-  //       ipcRenderer.removeAllListeners("socket-data");
-  //     };
-  //   }
-  // }, []);
-
-  function calculateDistance(point1, point2) {
-    return Math.sqrt(Math.pow(point1.clientX - point2.clientX, 2) + Math.pow(point1.clientY - point2.clientY, 2));
-  }
-
-  function isTriangle(entity) {
-    const points = [
-      { clientX: entity[0].clientX, clientY: entity[0].clientY },
-      { clientX: entity[1].clientX, clientY: entity[1].clientY },
-      { clientX: entity[2].clientX, clientY: entity[2].clientY }
-    ];
-    const distances = [
-      calculateDistance(points[0], points[1]),
-      calculateDistance(points[1], points[2]),
-      calculateDistance(points[2], points[0])
-    ];
-    const threshold = 150;
-    return distances.every((distance, index, array) => Math.abs(distance - array[(index + 1) % 3]) < threshold);
-  }
-
   useEffect(() => {
-    const handleTouchMove = (event) => {
+    const handleDoubleClick = (event) => {
+      const coordinates = { clientX: event.clientX, clientY: event.clientY };
+      setXcoordinates([...xcoordinates, coordinates.clientX]);
+      setYcoordinates([...ycoordinates, coordinates.clientY]);
+      if (window.require) {
+        if (initialRender.current) {
+          const { ipcRenderer } = window.require("electron");
+          ipcRenderer.send("event-clicked", { "event-clicked": "start" });
+        }
+        initialRender.current = false
+      }
+    };
+
+    var clickCount = 0;
+
+    const doubleClickWrapper = (event) => {
       event.preventDefault();
       event.stopPropagation();
-      const touches = event.touches;
-      if (touches.length % 3 === 0) {
-        const touchCoordinates = [];
-        for (let i = 0; i < touches.length; i++) {
-          touchCoordinates.push({ clientX: touches[i].clientX, clientY: touches[i].clientY })
-        }
-        const noOfTriangles = event.touches.length / 3;
-        for (let j = 0; j < noOfTriangles; j++) {
-          let newTouches = touchCoordinates.splice(j, ((j + 1) * 3))
-          if (newTouches.length === 3) {
-            const triangle = isTriangle(newTouches);
-            if (triangle) {
-              function calculateCenter(coordinates) {
-                const totalPoints = coordinates.length;
-                const sumX = coordinates.reduce((acc, point) => acc + point.clientX, 0);
-                const sumY = coordinates.reduce((acc, point) => acc + point.clientY, 0);
-                const centerX = sumX / totalPoints;
-                const centerY = sumY / totalPoints;
-                setXcoordinates([...xcoordinates, centerX])
-                setYcoordinates([...ycoordinates, centerY])
-                // if (window.require) {
-                //   let timerId;
-                //   const { ipcRenderer } = window.require("electron");
-                //   if (initialRender.current) {
-                //     ipcRenderer.send("event-clicked", { "event-clicked": "start" });
-                //   }
-                //   clearTimeout(timerId);
-                //   initialRender.current = false
-                //   timerId = setTimeout(() => {
-                //     const endedTouchIds = Array.from(event.changedTouches).map(touch => touch.identifier);
-                //     const remainingX = xcoordinates.filter((_, index) => !endedTouchIds.includes(index));
-                //     const remainingY = ycoordinates.filter((_, index) => !endedTouchIds.includes(index));
-                //     if (remainingX.length === 0 && remainingY.length === 0) {
-                //       ipcRenderer.send("event-clicked", { "event-clicked": "reset" });
-                //     }
-                //     setXcoordinates(remainingX);
-                //     setYcoordinates(remainingY);
-                //     initialRender.current = true
-                //   }, 3000);
-                // } else {
-                //   let timerId;
-                //   clearTimeout(timerId);
-                //   initialRender.current = false
-                //   timerId = setTimeout(() => {
-                //     const endedTouchIds = Array.from(event.changedTouches).map(touch => touch.identifier);
-                //     const remainingX = xcoordinates.filter((_, index) => !endedTouchIds.includes(index));
-                //     const remainingY = ycoordinates.filter((_, index) => !endedTouchIds.includes(index));
-                //     setXcoordinates(remainingX);
-                //     setYcoordinates(remainingY);
-                //     initialRender.current = true
-                //   }, 3000);
-                // }
-                return { centerX, centerY };
-              }
-              const coordinates = []
-              for (let i = 0; i < newTouches.length; i++) {
-                coordinates.push({ clientX: newTouches[i].clientX, clientY: newTouches[i].clientY })
-              }
-              calculateCenter(coordinates);
-            }
-          }
-        }
+      clickCount++;
+      if (clickCount === 2) {
+        clickCount = 0;
+        handleDoubleClick(event);
       }
     }
+    document.addEventListener('click', doubleClickWrapper, false);
+    return () => {
+      document.removeEventListener('click', doubleClickWrapper);
+    };
+  }, [xcoordinates, ycoordinates])
 
-    const handleTouchEnd = (event) => {
-      event.preventDefault()
-      event.stopPropagation()
-      console.log("end")
-      const endedTouchIds = Array.from(event.changedTouches).map(touch => touch.identifier);
-      const remainingX = xcoordinates.filter((_, index) => !endedTouchIds.includes(index));
-      const remainingY = ycoordinates.filter((_, index) => !endedTouchIds.includes(index));
-      setXcoordinates(remainingX);
-      setYcoordinates(remainingY);
-      if (window.require && remainingX.length === 0 && remainingY.length === 0) {
-        setXcoordinates([]);
-        setYcoordinates([]);
+  const onTouchMove = (event, index) => {
+    let existingXcoordinates = [...xcoordinates]
+    let existingYcoordinates = [...ycoordinates]
+    existingXcoordinates[index] = event.touches[0].clientX
+    existingYcoordinates[index] = event.touches[0].clientY
+    setXcoordinates(existingXcoordinates)
+    setYcoordinates(existingYcoordinates)
+  }
+
+  const handleClose = (index) => {
+    let existingXcoordinates = [...xcoordinates]
+    let existingYcoordinates = [...ycoordinates]
+    existingXcoordinates.splice(index, 1)
+    existingYcoordinates.splice(index, 1)
+    setXcoordinates(existingXcoordinates)
+    setYcoordinates(existingYcoordinates)
+    if (existingXcoordinates.length === 0 && existingYcoordinates.length === 0) {
+      if (window.require) {
         const { ipcRenderer } = window.require("electron");
         ipcRenderer.send("event-clicked", { "event-clicked": "reset" });
+      } else {
+        console.log("end")
       }
     }
-    document.addEventListener('touchmove', handleTouchMove, { passive: false });
-    document.addEventListener('touchend', handleTouchEnd, { passive: false });
-    return () => {
-      document.removeEventListener('touchmove', handleTouchMove);
-      document.removeEventListener('touchend', handleTouchEnd);
-    };
-  }, []);
+  }
 
   return (
     <Box
@@ -174,7 +94,7 @@ const App = () => {
         </> :
         <>
           {xcoordinates.map((o, index) => {
-            return <TouchTable key={index} x={(o - (radius * 1.5)) < 0 ? 0 : (o - (radius * 1.5))} y={(window.innerHeight - (ycoordinates[index]) - radius) < 0 ? 0 : (window.innerHeight - (ycoordinates[index]) - radius)} />
+            return <TouchTable handleClose={handleClose} index={index} key={index} x={(o - (radius * 1.5)) < 0 ? 0 : (o - (radius * 1.5))} y={(window.innerHeight - (ycoordinates[index]) - radius) < 0 ? 0 : (window.innerHeight - (ycoordinates[index]) - radius)} onTouchMove={onTouchMove} />
           })}
         </>
       }

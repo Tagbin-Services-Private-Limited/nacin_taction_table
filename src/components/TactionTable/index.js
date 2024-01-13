@@ -27,7 +27,7 @@ import pangolin from "../../assets/images/pangolin.png"
 import sea_turtle from "../../assets/images/sea_turtle.png"
 import smooth_coated_otter from "../../assets/images/smooth_coated_otter.png"
 import walrus from "../../assets/images/walrus.png"
-
+import CloseIcon from '@mui/icons-material/Close';
 
 const lineLength = 60;
 const imageWidth = 282;
@@ -250,6 +250,23 @@ const TouchTable = (data) => {
         isInitialRender.current = false;
     }, [data]);
 
+
+    useEffect(() => {
+        if (document.getElementById(`table_${data.index}`) && cordinates) {
+            const handleMove = (event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                data.onTouchMove(event, data.index);
+            }
+            document.getElementById(`table_${data.index}`).addEventListener("touchmove", handleMove, { passive: false });
+            return () => {
+                if (document.getElementById(`table_${data.index}`) && cordinates) {
+                    document.getElementById(`table_${data.index}`).removeEventListener("touchmove", handleMove, { passive: false });
+                }
+            }
+        }
+    }, [cordinates, data])
+
     const getRotation = () => {
         if (!isSpaceOnTop && isSpaceOnRight) {
             return '135deg'
@@ -341,7 +358,7 @@ const TouchTable = (data) => {
     }
 
     return (
-        <Box sx={{ position: 'absolute', left: cordinates.x, bottom: cordinates.y }}>
+        <Box id={`table_${data.index}`} sx={{ position: 'absolute', left: cordinates.x, bottom: cordinates.y }}>
             <Box sx={{ position: "relative" }}>
                 {/* <Typography textAlign={"center"}>X:{parseInt(cordinates.x)} - Y:{parseInt(cordinates.y)} height: {window.innerHeight} width:{window.innerWidth} </Typography> */}
                 <Box
@@ -356,6 +373,7 @@ const TouchTable = (data) => {
                 />
                 {/* <Typography textAlign={"center"}>X:{parseInt(cordinates.x)} - Y:{parseInt(cordinates.y)} height: {window.innerHeight} width:{window.innerWidth} </Typography> */}
             </Box>
+            <Box sx={{ position: 'absolute', top: 0, left: isSpaceOnRight && '-20px', right: !isSpaceOnRight && '-20px' }} onClick={() => data.handleClose(data.index)}><CloseIcon /></Box>
             <Box
                 sx={{
                     position: 'absolute',
