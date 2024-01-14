@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react"
 import { Box } from "@mui/material";
 import Bg from "./assets/images/bg.png"
-import Placeholder from "./assets/images/placeholder.svg"
+import Placeholder from "./assets/images/placeholder.png"
 import TouchTable from "./components/TactionTable"
 
 const radius = 100
@@ -31,10 +31,17 @@ const App = () => {
       event.preventDefault();
       event.stopPropagation();
       clickCount++;
-      if (clickCount === 2) {
+      let clickTimer
+      if (clickCount === 1) {
+        clickTimer = setTimeout(() => {
+          clickCount = 0;
+        }, 300);
+      } else if (clickCount === 2) {
+        clearTimeout(clickTimer);
         clickCount = 0;
         handleDoubleClick(event);
       }
+
     }
     document.addEventListener('click', doubleClickWrapper, false);
     return () => {

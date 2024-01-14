@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Box, Button, Typography } from "@mui/material";
-import Placeholder from "../../assets/images/placeholder.svg";
+import Placeholder from "../../assets/images/placeholder.png";
 import BtnBackground from "../../assets/images/btnBg.png"
 import BtnBackgroundActive from "../../assets/images/btnBgActive.png"
 import audioFile from "../../assets/audio/audio.mp3"
@@ -34,7 +34,7 @@ const imageWidth = 282;
 const cardHeight = 160;
 const buttonHeight = 40;
 const buttonWidth = 240;
-const animationDuration = 2000;
+const animationDuration = 1000;
 const buttonAnimationDuration = 1000;
 const threshold = 300
 
@@ -176,7 +176,7 @@ const renderItem = {
 
 const TouchTable = (data) => {
     const isPaused = React.useRef(false);
-    const audioRef = React.useRef(new Audio(audioFile));
+    // const audioRef = React.useRef(new Audio(audioFile));
     const [cordinates, setCordinates] = useState();
     const [selectedBtn, setSelectedBtn] = useState('');
     const [selectedCard, setSelectedCard] = useState('');
@@ -206,24 +206,24 @@ const TouchTable = (data) => {
         setCordinates({ x, y });
         const playAudio = () => {
             setIsLogoAnimated(true);
-            audioRef.current.play().catch(error => {
-                console.error("Autoplay failed:", error);
-            });
+            // audioRef.current.play().catch(error => {
+            //     console.error("Autoplay failed:", error);
+            // });
 
-            audioRef.current.addEventListener('ended', () => {
-                if (isPaused.current) {
-                    return;
-                }
-                audioRef.current.play().catch(error => {
-                    console.error("Autoplay failed:", error);
-                });
-            });
+            // audioRef.current.addEventListener('ended', () => {
+            //     if (isPaused.current) {
+            //         return;
+            //     }
+            //     audioRef.current.play().catch(error => {
+            //         console.error("Autoplay failed:", error);
+            //     });
+            // });
 
             setTimeout(() => {
                 setAnimateAnotherContent(true);
                 setTimeout(() => {
                     isPaused.current = true;
-                    audioRef.current.pause();
+                    // audioRef.current.pause();
                 }, buttonAnimationDuration);
             }, animationDuration);
         };
@@ -240,7 +240,7 @@ const TouchTable = (data) => {
         } else {
             if (isInitialRender.current) {
                 isPaused.current = false;
-                audioRef.current.currentTime = 0
+                // audioRef.current.currentTime = 0
                 prevCoordinates.current = newCoordinates;
                 setIsLogoAnimated(false);
                 setAnimateAnotherContent(false);
