@@ -3,7 +3,7 @@ import { Box, Button, Typography } from "@mui/material";
 import Placeholder from "../../assets/images/placeholder.png";
 import BtnBackground from "../../assets/images/btnBg.png"
 import BtnBackgroundActive from "../../assets/images/btnBgActive.png"
-import audioFile from "../../assets/audio/audio.mp3"
+// import audioFile from "../../assets/audio/audio.mp3"
 import { useRef } from "react";
 import arrowImage from "../../assets/images/arrow.svg"
 import btn1Active from "../../assets/images/btn1Active.png"
@@ -358,12 +358,13 @@ const TouchTable = (data) => {
     }
 
     return (
-        <Box id={`table_${data.index}`} sx={{ position: 'absolute', left: cordinates.x, bottom: cordinates.y }}>
+        <Box sx={{ position: 'absolute', left: cordinates.x, bottom: cordinates.y }}>
             <Box sx={{ position: "relative" }}>
                 {/* <Typography textAlign={"center"}>X:{parseInt(cordinates.x)} - Y:{parseInt(cordinates.y)} height: {window.innerHeight} width:{window.innerWidth} </Typography> */}
                 <Box
                     component="img"
                     src={Placeholder}
+                    id={`table_${data.index}`}
                     sx={{
                         opacity: isLogoAnimated ? 1 : 0,
                         transition: `opacity ${animationDuration}ms ease-in-out`,
@@ -729,7 +730,7 @@ const TouchTable = (data) => {
                         console.log("clicked cites")
                         if (window.require) {
                             const { ipcRenderer } = window.require("electron");
-                            ipcRenderer.send("event-clicked", { "event-clicked": 'cites' });
+                            ipcRenderer.send("event-clicked", { "event-clicked": 'gorilla' });
                         }
                         setSelectedBtn('cites');
                         setSelectedCard(btnCardsMap['cites'][1][0]);
