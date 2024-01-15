@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react"
 import { Box } from "@mui/material";
 import Bg from "./assets/images/bg.png"
-import Placeholder from "./assets/images/placeholder.png"
+import Placeholder from "./assets/images/first.jpg"
 import TouchTable from "./components/TactionTable"
 
 const radius = 100
@@ -89,15 +89,7 @@ const App = () => {
       {xcoordinates.length === 0 ?
         <>
           <img src={Placeholder} alt="placeholder" />
-          <h1
-            style={{
-              fontFamily: "'Red Rose', serif",
-              fontSize: "22px",
-              fontWeight: 700,
-              marginLeft: '100px'
-            }}>
-            PLACE YOUR DISK ON THE PLACEHOLDER TO EXPLORE TOPICS
-          </h1>
+
         </> :
         <>
           {xcoordinates.map((o, index) => {

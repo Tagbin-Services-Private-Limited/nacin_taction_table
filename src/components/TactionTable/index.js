@@ -732,7 +732,7 @@ const TouchTable = (data) => {
                             ipcRenderer.send("event-clicked", { "event-clicked": 'cites' });
                         }
                         setSelectedBtn('cites');
-                        setSelectedCard(btnCardsMap['cites'][0]);
+                        setSelectedCard(btnCardsMap['cites'][1][0]);
                         setCarouselIndex(0);
                         setVisibleCards(5);
                     }}
