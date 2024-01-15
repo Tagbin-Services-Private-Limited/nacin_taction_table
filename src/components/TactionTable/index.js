@@ -13,20 +13,35 @@ import btn1Inactive from "../../assets/images/btn1Inactive.png"
 import btn2Inactive from "../../assets/images/btn2Inactive.png"
 import btn3Inactive from "../../assets/images/btn3Inactive.png"
 import american_alligator from "../../assets/images/american_alligator.png"
+import american_alligator_selected from "../../assets/images/american_alligator_selected.png"
 import cape_stag_beetle from "../../assets/images/cape_stag_beetle.png"
+import cape_stag_beetle_selected from "../../assets/images/cape_stag_beetle_selected.png"
 import corals from "../../assets/images/corals.png"
+import corals_selected from "../../assets/images/corals_selected.png"
 import giant_panda from "../../assets/images/giant_panda.png"
+import giant_panda_selected from "../../assets/images/giant_panda_selected.png"
 import gorilla from "../../assets/images/gorilla.png"
-import indian_star_tortoise from "../../assets/images/indian_star_tortoise.png"
-import lion_african from "../../assets/images/lion-african.png"
-import lion_indian from "../../assets/images/lion-indian.png"
+import gorilla_selected from "../../assets/images/gorilla_selected.png"
+import indian_star_tortoise from "../../assets/images/tortoise.png"
+import indian_star_tortoise_selected from "../../assets/images/tortoise_selected.png"
+import lion_african from "../../assets/images/lion_african.png"
+import lion_african_selected from "../../assets/images/lion_african_selected.png"
+import lion_indian from "../../assets/images/lion_indian.png"
+import lion_indian_selected from "../../assets/images/lion_indian_selected.png"
 import map_turtles from "../../assets/images/map_turtles.png"
+import map_turtles_selected from "../../assets/images/map_turtles_selected.png"
 import owl from "../../assets/images/owl.png"
+import owl_selected from "../../assets/images/owl_selected.png"
 import paddlefish from "../../assets/images/paddlefish.png"
+import paddlefish_selected from "../../assets/images/paddlefish_selected.png"
 import pangolin from "../../assets/images/pangolin.png"
+import pangolin_selected from "../../assets/images/pangolin_selected.png"
 import sea_turtle from "../../assets/images/sea_turtle.png"
+import sea_turtle_selected from "../../assets/images/sea_turtle_selected.png"
 import smooth_coated_otter from "../../assets/images/smooth_coated_otter.png"
+import smooth_coated_otter_selected from "../../assets/images/smooth_coated_otter_selected.png"
 import walrus from "../../assets/images/walrus.png"
+import walrus_selected from "../../assets/images/walrus_selected.png"
 import CloseIcon from '@mui/icons-material/Close';
 
 const lineLength = 60;
@@ -110,67 +125,83 @@ const renderItem = {
     },
     gorilla: {
         value: "Gorilla",
-        image: gorilla
+        image: gorilla,
+        selectedImage: gorilla_selected
     },
     sea_turtle: {
         value: "Sea Turtle",
-        image: sea_turtle
+        image: sea_turtle,
+        selectedImage: sea_turtle_selected
     },
     giant_panda: {
         value: "Giant Panda",
-        image: giant_panda
+        image: giant_panda,
+        selectedImage: giant_panda_selected
     },
     smooth_coated_otter: {
         value: "Smooth Coated Otter",
-        image: smooth_coated_otter
+        image: smooth_coated_otter,
+        selectedImage: smooth_coated_otter_selected
     },
     indian_star_tortoise: {
         value: "Indian Star Tortoise",
-        image: indian_star_tortoise
+        image: indian_star_tortoise,
+        selectedImage: indian_star_tortoise_selected
     },
     "lion-indian": {
         value: "Lion-Indian",
-        image: lion_indian
+        image: lion_indian,
+        selectedImage: lion_indian_selected
     },
     walrus: {
         value: "Walrus",
-        image: walrus
+        image: walrus,
+        selectedImage: walrus_selected
     },
     pangolin: {
         value: "Pangolin",
-        image: pangolin
+        image: pangolin,
+        selectedImage: pangolin_selected
     },
     small_clawed_otter: {
         value: "Small Clawed Otter",
-        image: smooth_coated_otter
+        image: smooth_coated_otter,
+        selectedImage: smooth_coated_otter_selected
     },
     paddlefish: {
         value: "Paddlefish",
-        image: paddlefish
+        image: paddlefish,
+        selectedImage: paddlefish_selected
     },
     "lion-african": {
         value: "Lion-African",
-        image: lion_african
+        image: lion_african,
+        selectedImage: lion_african_selected
     },
     owl: {
         value: "Owl",
-        image: owl
+        image: owl,
+        selectedImage: owl_selected
     },
     american_alligator: {
         value: "American Alligator",
-        image: american_alligator
+        image: american_alligator,
+        selectedImage: american_alligator_selected
     },
     corals: {
         value: "Corals",
-        image: corals
+        image: corals,
+        selectedImage: corals_selected
     },
     map_turtles: {
         value: "Map Turtles",
-        image: map_turtles
+        image: map_turtles,
+        selectedImage: map_turtles_selected
     },
     cape_stag_beetle: {
         value: "Cape Stag Beetle",
-        image: cape_stag_beetle
+        image: cape_stag_beetle,
+        selectedImage: cape_stag_beetle_selected
     },
 }
 
@@ -832,7 +863,7 @@ const TouchTable = (data) => {
                                             setSelectedCard(o);
                                         }}
                                     >
-                                        <img src={renderItem[o].image} alt={o} />
+                                        <img src={selectedCard === o ? renderItem[o].selectedImage : renderItem[o].image} alt={o} />
                                         <Typography variant="h4"
                                             sx={{
                                                 fontSize: '0.875rem',
